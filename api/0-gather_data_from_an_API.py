@@ -6,7 +6,7 @@ import sys
 def gather_data(employee_id):
     """
     Fetches and prints employee's TODO list progress.
-    
+
     Parameters:
         employee_id (int): The employee's ID.
     """
