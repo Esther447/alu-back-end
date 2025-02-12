@@ -1,47 +1,82 @@
 #!/usr/bin/python3
-import sys
+"""
+This script fetches TODO list progress for a given employee from a REST API.
+
+It accepts an employee ID as an argument and retrieves the corresponding
+TODO list information. It displays the employee's name, the number of completed
+tasks, the total number of tasks, and the titles of the completed tasks.
+
+Usage:
+    python3 0-gather_data_from_an_API.py <employee_id>
+
+Requirements:
+    - The script uses the `requests` library to make HTTP requests.
+    - The script must be run on Ubuntu 14.04 LTS with Python 3.4.3.
+    - The employee ID must be an integer passed as a command-line argument.
+"""
+
 import requests
+import sys
 
-def fetch_employee_todo_list(employee_id):
+def gather_data(employee_id):
     """
-    Fetches the TODO list for a given employee ID from the REST API.
+    Fetches the TODO list progress for the given employee ID and prints it
+    in the specified format.
 
-    Args:
-        employee_id (int): The ID of the employee to fetch the TODO list for.
-
-    Returns:
-        list: A list of dictionaries representing the TODO tasks if successful, or None if an error occurs.
-    """
-    # URL of the REST API that provides employee data
-    url = f"https://jsonplaceholder.typicode.com/users/{employee_id}/todos"
+    Arguments:
+        employee_id (int): The ID of the employee whose TODO list is to
+                            be fetched.
     
-    # Send a GET request to the API
+    The function makes two API requests:
+    - One to fetch the employee's TODO list.
+    - One to fetch the employee's user details (name).
+    Then, it calculates the number of completed tasks and displays them.
+    """
+    
+    # Define the URL of the API endpoint
+    url = f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
+    
+    # Send GET request to the API
     response = requests.get(url)
     
-    # Check if the request was successful (status code 200)
     if response.status_code != 200:
-        print("Error fetching data.")
-        return None
+        print("Failed to retrieve data")
+        return
     
-    # Return the JSON response, which contains the TODO list
-    return response.json()
-
-def fetch_employee_name(employee_id):
-    """
-    Fetches the name of an employee given their employee ID from the REST API.
-
-    Args:
-        employee_id (int): The ID of the employee.
-
-    Returns:
-        str: The employee's name if successful, or None if an error occurs.
-    """
-    # URL to fetch the employee's details
-    employee_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
+    # Parse the JSON response
+    todos = response.json()
     
-    # Send a GET request to fetch employee data
-    employee_response = requests.get(employee_url)
+    # Filter the completed tasks
+    completed_tasks = [task for task in todos if task['completed']]
     
-    # Check if the request was successful
-    if employee_response.status_code != 200:
-        print("Error fetching empl
+    # Get employee name (using a second API call to get user details)
+    user_response = requests.get(f"https://jsonplaceholder.typicode.com/users/{employee_id}")
+    
+    if user_response.status_code != 200:
+        print("Failed to retrieve user data")
+        return
+    
+    user_data = user_response.json()
+    employee_name = user_data.get('name')
+    
+    # Print the employee's TODO list progress
+    total_tasks = len(todos)
+    done_tasks = len(completed_tasks)
+    
+    print(f"Employee {employee_name} is done with tasks({done_tasks}/{total_tasks}):")
+    
+    for task in completed_tasks:
+        print(f"\t{task['title']}")
+
+if __name__ == "__main__":
+    # Ensure the script is run with an integer as a parameter
+    if len(sys.argv) != 2:
+        print("Usage: python3 0-gather_data_from_an_API.py <employee_id>")
+        sys.exit(1)
+    
+    try:
+        employee_id = int(sys.argv[1])
+        gather_data(employee_id)
+    except ValueError:
+        print("Employee ID must be an integer")
+        sys.exit(1)
