@@ -1,3 +1,4 @@
+
 #!/usr/bin/python3
 """
 This script fetches TODO list progress for a given employee from a REST API.
@@ -64,7 +65,8 @@ def gather_data(employee_id):
     total_tasks = len(todos)
     done_tasks = len(completed_tasks)
 
-    print(f"Employee {employee_name} is done with tasks({done_tasks}/{total_tasks}):")
+    print(f"Employee {employee_name} is done with tasks(", end="")
+    print(f"{done_tasks}/{total_tasks}):")
 
     for task in completed_tasks:
         print(f"\t{task['title']}")
@@ -81,4 +83,3 @@ if __name__ == "__main__":
     except ValueError:
         print("Employee ID must be an integer")
         sys.exit(1)
-
