@@ -7,6 +7,14 @@ def gather_data(employee_id):
     """
     Fetches data about an employee's TODO list progress and displays it.
 
+    Parameters:
+    employee_id (int): The ID of the employee whose TODO list progress is to be fetched.
+
+    The function makes two HTTP requests to the 'jsonplaceholder.typicode.com' API:
+    - One to fetch the employee's details (name)
+    - One to fetch the employee's TODO list
+    It then prints the employee's name, the number of completed tasks, the total number of tasks,
+    and the titles of the completed tasks in a specific format.
     """
 
     # Define the API URL to get user and TODOs
