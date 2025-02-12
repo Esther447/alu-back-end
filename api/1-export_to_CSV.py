@@ -34,7 +34,9 @@ def gather_and_export_data(employee_id):
     Then, it calculates the number of completed tasks and writes the data to a CSV file.
     """
     # Define the URL of the API endpoint
-    url = f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
+    url = (
+        f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
+    )
 
     # Send GET request to the API
     response = requests.get(url)
@@ -42,12 +44,12 @@ def gather_and_export_data(employee_id):
     if response.status_code != 200:
         print("Failed to retrieve data")
         return
-
-    # Parse the JSON response
+       # Parse the JSON response
     todos = response.json()
 
     # Get employee name (using a second API call to get user details)
-    user_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
+    user_url = (
+        f"https://jsonplaceholder.typicode.com/users/{employee_id}")
     user_response = requests.get(user_url)
 
     if user_response.status_code != 200:
