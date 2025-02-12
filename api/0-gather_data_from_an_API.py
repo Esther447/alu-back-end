@@ -27,19 +27,18 @@ def gather_data(employee_id):
     Arguments:
         employee_id (int): The ID of the employee whose TODO list is to
                             be fetched.
-
     The function makes two API requests:
     - One to fetch the employee's TODO list.
-    - One to fetch the employee's user details (name).
+   - One to fetch the employee's user details (name).
     Then, it calculates the number of completed tasks and displays them.
     """
 
     # Define the URL of the API endpoint
     url = f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
-    
+
     # Send GET request to the API
     response = requests.get(url)
-    
+
     if response.status_code != 200:
         print("Failed to retrieve data")
         return
