@@ -1,51 +1,47 @@
 #!/usr/bin/python3
-
-import requests
 import sys
+import requests
 
-def gather_data(employee_id):
+def fetch_employee_todo_list(employee_id):
     """
-    Fetches and prints employee's TODO list progress.
+    Fetches the TODO list for a given employee ID from the REST API.
 
-    Parameters:
-        employee_id (int): The employee's ID.
+    Args:
+        employee_id (int): The ID of the employee to fetch the TODO list for.
+
+    Returns:
+        list: A list of dictionaries representing the TODO tasks if successful, or None if an error occurs.
     """
-    # URLs for the user and todo list API
-    user_url = f'https://jsonplaceholder.typicode.com/users/{employee_id}'
-    todo_url = f'https://jsonplaceholder.typicode.com/todos?userId={employee_id}'
-
-    # Fetch user details
-    user_response = requests.get(user_url)
-    if user_response.status_code != 200:
-        print("User not found")
-        return
-
-    # Get employee name
-    user_data = user_response.json()
-    employee_name = user_data['name']
-
-    # Fetch TODO list details
-    todo_response = requests.get(todo_url)
-    if todo_response.status_code != 200:
-        print("Failed to retrieve TODO list")
-        return
-
-    todos = todo_response.json()
-    completed_tasks = [task['title'] for task in todos if task['completed']]
-    total_tasks = len(todos)
-
-    # Print employee's progress
-    print(f'Employee {employee_name} is done with tasks({len(completed_tasks)}/{total_tasks}):')
-    for task in completed_tasks:
-        print(f'\t {task}')
-
-if __name__ == '__main__':
-    """
-    Main function to get employee ID and fetch their TODO progress.
+    # URL of the REST API that provides employee data
+    url = f"https://jsonplaceholder.typicode.com/users/{employee_id}/todos"
     
-    Usage:
-    python3 0-gather_data_from_an_API.py <employee_id>
+    # Send a GET request to the API
+    response = requests.get(url)
+    
+    # Check if the request was successful (status code 200)
+    if response.status_code != 200:
+        print("Error fetching data.")
+        return None
+    
+    # Return the JSON response, which contains the TODO list
+    return response.json()
+
+def fetch_employee_name(employee_id):
     """
-    if len(sys.argv) != 2:
-        print("Usage: python3 0-gather_data_from_an_API.py <employee_id>")
-        sys
+    Fetches the name of an employee given their employee ID from the REST API.
+
+    Args:
+        employee_id (int): The ID of the employee.
+
+    Returns:
+        str: The employee's name if successful, or None if an error occurs.
+    """
+    # URL to fetch the employee's details
+    employee_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
+    
+    # Send a GET request to fetch employee data
+    employee_response = requests.get(employee_url)
+    
+    # Check if the request was successful
+    if employee_response.status_code != 200:
+        print("Error fetching empl
