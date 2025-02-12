@@ -4,6 +4,11 @@ import requests
 import sys
 
 def gather_data(employee_id):
+    """
+    Fetches data about an employee's TODO list progress and displays it.
+
+    """
+
     # Define the API URL to get user and TODOs
     user_url = f'https://jsonplaceholder.typicode.com/users/{employee_id}'
     todo_url = f'https://jsonplaceholder.typicode.com/todos?userId={employee_id}'
