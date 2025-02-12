@@ -1,4 +1,3 @@
-
 #!/usr/bin/python3
 """
 This script fetches TODO list progress for a given employee from a REST API.
@@ -28,14 +27,16 @@ def gather_data(employee_id):
     Arguments:
         employee_id (int): The ID of the employee whose TODO list is to
                             be fetched.
+
     The function makes two API requests:
     - One to fetch the employee's TODO list.
-   - One to fetch the employee's user details (name).
+    - One to fetch the employee's user details (name).
     Then, it calculates the number of completed tasks and displays them.
     """
 
     # Define the URL of the API endpoint
-    url = f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
+    url = f"https://jsonplaceholder.typicode.com/todos?"
+    url += f"userId={employee_id}"
 
     # Send GET request to the API
     response = requests.get(url)
@@ -71,6 +72,7 @@ def gather_data(employee_id):
     for task in completed_tasks:
         print(f"\t{task['title']}")
 
+
 if __name__ == "__main__":
     # Ensure the script is run with an integer as a parameter
     if len(sys.argv) != 2:
@@ -83,3 +85,4 @@ if __name__ == "__main__":
     except ValueError:
         print("Employee ID must be an integer")
         sys.exit(1)
+
