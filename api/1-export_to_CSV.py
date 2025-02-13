@@ -1,56 +1,34 @@
 #!/usr/bin/python3
-"""
-Module to fetch user information and export TODO list to a CSV file
-"""
+""" Script that uses JSONPlaceholder API to get information about employee """
 import csv
 import requests
-from sys import argv
-
-
-def get_employee_info(employee_id):
-    """
-    Get employee information by employee ID
-    """
-    url = f'https://jsonplaceholder.typicode.com/users/{employee_id}'
-    response = requests.get(url)
-    return response.json()
-
-
-def get_employee_todos(employee_id):
-    """
-    Get the TODO list of the employee by employee ID
-    """
-    url = f'https://jsonplaceholder.typicode.com/users/{employee_id}/todos'
-    response = requests.get(url)
-    return response.json()
-
-
-def export_to_csv(employee_id, username, todos):
-    """
-    Export TODO list to a CSV file
-    """
-    filename = f'{employee_id}.csv'
-    with open(filename, mode='w') as file:
-        file_writer = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
-        for todo in todos:
-            rowData = [employee_id, username, todo['completed'], todo['title']]
-            file_writer.writerow(rowData)
-
-
-def main(employee_id):
-    """
-    Main function to fetch user info and TODO list, then export to CSV
-    """
-    user = get_employee_info(employee_id)
-    username = user.get("username")
-
-    todos = get_employee_todos(employee_id)
-
-    export_to_csv(employee_id, username, todos)
+import sys
 
 
 if __name__ == "__main__":
-    if len(argv) > 1:
-        main(argv[1])
-    else:
-        print("Usage: ./1-export_to_CSV.py <employee_id>")
+    url = 'https://jsonplaceholder.typicode.com/'
+
+    userid = sys.argv[1]
+    user = '{}users/{}'.format(url, userid)
+    res = requests.get(user)
+    json_o = res.json()
+    name = json_o.get('username')
+
+    todos = '{}todos?userId={}'.format(url, userid)
+    res = requests.get(todos)
+    tasks = res.json()
+    l_task = []
+    for task in tasks:
+        l_task.append([userid,
+                       name,
+                       task.get('completed'),
+                       task.get('title')])
+
+    filename = '{}.csv'.format(userid)
+    with open(filename, mode='w') as employee_file:
+        employee_writer = csv.writer(employee_file,
+                                     delimiter=',',
+                                     quotechar='"',
+                                     quoting=csv.QUOTE_ALL)
+        for task in l_task:
+            employee_writer.writerow(task)
